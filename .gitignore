@@ -22,12 +22,21 @@ venv/
 
 # Temporary files
 carla_simulation/temp
-doc/jupyter/.ipynb_checkpoints/*
+docs/jupyter/.ipynb_checkpoints/*
 
-/results
+*/results/*
 
 # Testing
-doc/jupyter/opensbt-core
-doc/jupyter/tmp
-doc/jupyter/venv
-doc/jupyter/.ipynb_checkpoints
+docs/jupyter/opensbt-core
+docs/jupyter/tmp
+docs/jupyter/venv
+docs/jupyter/.ipynb_checkpoints
+
+#build
+*/*egg-info
+*/dist/*
+opensbt.egg-info/dependency_links.txt
+opensbt.egg-info/PKG-INFO
+opensbt.egg-info/requires.txt
+opensbt.egg-info/SOURCES.txt
+opensbt.egg-info/top_level.txt

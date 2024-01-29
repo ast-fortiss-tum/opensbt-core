@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "OpenSBT"
+version = "0.1.5"
+authors = [
+  {name = "Lev Sorokin", email = "sorokin@fortiss.org"},
+]
+description = "OpenSBT is a Modular Framework for Search-based Testing of Automated Driving Systems"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: Apache Software License",
+  "Operating System :: POSIX :: Linux",
+]
+dependencies = [
+    'deap==1.4.1',
+    'numpy==1.24.4',
+    'scipy==1.10.1',
+    'matplotlib==3.7.4',
+    'docker==6.1.3',
+    'pandas==2.0.3',
+    'setuptools',
+    'scikit-learn==1.3.2',
+    'pymoo==0.6.0.1'
+]
+
+[project.urls]
+Homepage = "https://git.fortiss.org/opensbt"
+Issues = "https://git.fortiss.org/groups/opensbt/-/issues"
