@@ -1,3 +1,14 @@
+import pymoo
+
+from opensbt.model_ga.individual import IndividualSimulated
+pymoo.core.individual.Individual = IndividualSimulated
+
+from opensbt.model_ga.population import PopulationExtended
+pymoo.core.population.Population = PopulationExtended
+
+from opensbt.model_ga.problem import SimulationProblem
+pymoo.core.problem.Problem = SimulationProblem
+
 from pathlib import Path
 import numpy as np
 from pymoo.visualization.scatter import Scatter
@@ -114,6 +125,9 @@ def visualize_3d(population,
                 plot_des.add(X_plus_opt, facecolor=color_optimal, edgecolor=color_critical, s=markersize)
                 points_added = True
             
+            fig = plt.gcf()
+            fig.tight_layout()
+
             # Need this check, otherwise an exception is thrown, when there is nothing to be plotted
             if points_added:
                 if show:
@@ -139,3 +153,13 @@ def visualize_3d(population,
                 plot_des.add(X_plus_opt, facecolor=color_optimal, edgecolor=color_critical, s=markersize)
 
         plot_des.show()
+
+if __name__ == "__main__":
+    filename = f"/home/sorokin/Projects/testing/OpenSBT/opensbt-core/docs/example/all_testcases.csv"
+    pop, labels = read_testcases(filename=filename)
+    visualize_3d(pop,save_folder=os.getcwd() + os.sep + "output" + os.sep,
+                 labels=labels,
+                 angles=[(45,45)],
+                 dimension="X",
+                 do_save=True,
+                 show=False)
