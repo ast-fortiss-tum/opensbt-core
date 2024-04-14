@@ -109,6 +109,8 @@ def visualize_3d(population,
         Path(save_folder_design).mkdir(parents=True, exist_ok=True)   
         for angle in angles:
             plot_des = Scatter(title=title, labels = list(labels), angle=angle)
+            
+            print(f"[vis3d] ax: {plot_des.ax}")
             points_added = False
             if np.ma.count(X_plus, axis=0)[0] != 0:
                 plot_des.add(X_plus, facecolor=color_not_optimal, edgecolor=color_critical, s=markersize)
@@ -124,10 +126,18 @@ def visualize_3d(population,
                 print("added optimal and critical")
                 plot_des.add(X_plus_opt, facecolor=color_optimal, edgecolor=color_critical, s=markersize)
                 points_added = True
-            
             fig = plt.gcf()
+            ax = fig.gca()
+            print(f"[vis3d] type ax in vis3d: {type(ax)}")
+            print(f"[vis3d] {ax}")
+            import mpl_toolkits
+            # ax = mpl_toolkits.mplot3d.axes3d.Axes3D (ax)
+            # print([type(ax) for ax in fig.get_axes()])
+            # ax.dist = 2
+
             fig.tight_layout()
 
+            #ax.set_box_aspect(None, zoom=0.8)
             # Need this check, otherwise an exception is thrown, when there is nothing to be plotted
             if points_added:
                 if show:
