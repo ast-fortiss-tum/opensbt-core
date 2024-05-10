@@ -109,7 +109,7 @@ def getExp2() -> Experiment:
         critical_function=CriticalBnhDivided())
 
     config = DefaultSearchConfiguration()
-    config.maximal_execution_time = "00:00:01"
+    # config.maximal_execution_time = "00:00:01"
     config.n_generations = 10
     config.population_size = 10
     experiment = Experiment(name="2",

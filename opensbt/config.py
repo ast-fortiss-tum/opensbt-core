@@ -9,6 +9,9 @@ WRITE_ALL_INDIVIDUALS = True
 LOG_FILE = "." + os.sep + "log.txt"
 BACKUP_FOLDER = "backup"
 EXPERIMENTAL_MODE = False
+BACKUP_ITERATIONS = True
+BACKUP_PROBLEM = True
+BACKUP_RESULT = False
 
 # analysis module
 N_CELLS = 10
