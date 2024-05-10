@@ -16,8 +16,6 @@ from utils.sorting import *
 
 class SimulationResult(Result):
 
-    save_folder: str = None #we need to store results for each iteration, so we need to propagate
-
     def __init__(self) -> None:
         super().__init__()
         self._additional_data = dict()
@@ -126,7 +124,8 @@ class SimulationResult(Result):
     def write_results(self, 
                      results_folder = RESULTS_FOLDER, 
                      params=None, 
-                     is_experimental=EXPERIMENTAL_MODE):
+                     is_experimental=EXPERIMENTAL_MODE,
+                     save_folder = None):  # we can declare the results folder, or the save folder (specific for experiment)
         algorithm = self.algorithm
 
         # WHen algorithm is developed without subclassing pymoos Algorithm,
@@ -141,9 +140,12 @@ class SimulationResult(Result):
         log.info(f"=====[{algorithm_name}] Writing results to: ")
 
         # we can also pass already the save folder and do not to create it
-        if self.save_folder is None:
-            self.save_folder = visualizer.create_save_folder(self.problem, results_folder, algorithm_name, is_experimental=is_experimental)
-        save_folder = self.save_folder
+        if save_folder is None:
+            save_folder = visualizer. \
+                                create_save_folder(self.problem, 
+                                                    results_folder, 
+                                                    algorithm_name, 
+                                                    is_experimental=is_experimental)
         log.info(save_folder)
 
         if config.BACKUP_PROBLEM:

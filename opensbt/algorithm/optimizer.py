@@ -17,6 +17,8 @@ class Optimizer(ABC):
     
     parameters: str
 
+    save_folder: str
+    
     @abstractmethod
     def __init__(self, problem: SimulationProblem, config: SearchConfiguration):
         ''' Create here the algorithm instance to be used in run '''
@@ -42,5 +44,5 @@ class Optimizer(ABC):
                               name = f"algorithm_iteration_{n_iter}")
 
         res = algorithm.result()
-        res.save_folder = save_folder
+        self.save_folder = save_folder
         return res

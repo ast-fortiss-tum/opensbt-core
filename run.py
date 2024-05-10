@@ -190,6 +190,7 @@ if __name__ == "__main__":
 
     res = optimizer.run()
     res.write_results(results_folder=results_folder, 
-                      params = optimizer.parameters)
+                      params = optimizer.parameters,
+                      save_folder = optimizer.save_folder)
 
     log.info("====== Algorithm search time: " + str("%.2f" % res.exec_time) + " sec")
