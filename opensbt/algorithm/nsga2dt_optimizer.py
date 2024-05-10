@@ -1,3 +1,4 @@
+from opensbt.config import BACKUP_ITERATIONS
 from opensbt.model_ga.result  import SimulationResult
 from opensbt.evaluation.critical import *
 from pymoo.termination import get_termination
@@ -23,6 +24,7 @@ from opensbt.experiment.search_configuration import SearchConfiguration
 from opensbt.model_ga.result import *
 import logging as log
 from opensbt.algorithm.optimizer import Optimizer
+from opensbt.visualization.visualizer import backup_object, create_save_folder
 import copy
 import sys
 import time
@@ -86,6 +88,11 @@ class NsgaIIDTOptimizer(Optimizer):
         else:
             log.info("Parameters are not correctly set, cannot start search.")
             sys.exit()
+        ''' For backup '''
+        save_folder = create_save_folder(self.problem, 
+                                RESULTS_FOLDER,
+                                algorithm_name=self.algorithm_name,
+                                is_experimental=EXPERIMENTAL_MODE)
 
         ''' Computation start '''
         start_time = time.time()
@@ -166,6 +173,13 @@ class NsgaIIDTOptimizer(Optimizer):
                 critical_regions = [initial_region]
             tree_iteration += 1
 
+            if BACKUP_ITERATIONS:
+                result = self._create_result(problem, hist_holder, inner_algorithm, -1)
+                n_iter = tree_iteration
+                backup_object(result, 
+                                save_folder, 
+                                name = f"result_iteration_{n_iter}")
+
         execution_time = time.time() - start_time
 
         '''For forwarding to plotter'''
@@ -180,7 +194,7 @@ class NsgaIIDTOptimizer(Optimizer):
             "Mutation probability": str(config.prob_mutation),
             "Mutation eta": str(config.eta_mutation)}
         
-        result = self._create_result(problem, hist_holder, inner_algorithm, execution_time)
+        result = self._create_result(problem, hist_holder, inner_algorithm, execution_time, save_folder)
         self.res = result
         return result
 
@@ -196,7 +210,7 @@ class NsgaIIDTOptimizer(Optimizer):
             algo.opt = opt_pop
             hist_holder[tree_iteration * inner_num_gen + i] = algo
 
-    def _create_result(self, problem, hist_holder, inner_algorithm, execution_time):
+    def _create_result(self, problem, hist_holder, inner_algorithm, execution_time, save_folder = None):
         I = 0
         for algo in hist_holder:
             I += len(algo.pop)
@@ -220,5 +234,6 @@ class NsgaIIDTOptimizer(Optimizer):
         # log.info(f"opt_all: {opt_all}")
         opt_all_nds = get_nondominated_population(opt_all)
         res_holder.opt = opt_all_nds
+        res_holder.save_folder = save_folder
 
         return res_holder
