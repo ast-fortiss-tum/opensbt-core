@@ -1,13 +1,14 @@
 import numpy as np
 from pymoo.core.population import Population
+from opensbt.config import DUPLICATE_COMP_PRECISION
 
-def duplicate_free(population,precision=6):
+def duplicate_free(population,precision=DUPLICATE_COMP_PRECISION):
     inds = population.get("X")
     dup_free = [population[i] for i in remove_duplicates(inds, precision)]
     return Population(individuals = dup_free)
 
 ''' returns indices of elements of array M after elimination of duplicates '''
-def remove_duplicates(M,precision=6):
+def remove_duplicates(M,precision=DUPLICATE_COMP_PRECISION):
     res = []
     
     size = M.shape[0]

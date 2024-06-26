@@ -28,7 +28,8 @@ from opensbt.visualization.visualization3d import visualize_3d
 from opensbt.visualization import scenario_plotter
 from opensbt.config import BACKUP_FOLDER, CONSIDER_HIGH_VAL_OS_PLOT,  \
                             PENALTY_MAX, PENALTY_MIN, WRITE_ALL_INDIVIDUALS, \
-                                METRIC_PLOTS_FOLDER, LAST_ITERATION_ONLY_DEFAULT \
+                                METRIC_PLOTS_FOLDER, LAST_ITERATION_ONLY_DEFAULT, \
+                                OUTPUT_PRECISION
 
 
 def create_save_folder(problem: Problem, results_folder: str, algorithm_name: str, is_experimental=False):
@@ -590,8 +591,8 @@ def optimal_individuals(res, save_folder):
 
         for index in range(len(clean_pop)):
             row = [index]
-            row.extend(["%.6f" % X_i for X_i in clean_pop.get("X")[index]])
-            row.extend(["%.6f" % F_i for F_i in clean_pop.get("F")[index]])
+            row.extend([f"%.{OUTPUT_PRECISION}f" % X_i for X_i in clean_pop.get("X")[index]])
+            row.extend([f"%.{OUTPUT_PRECISION}f" % F_i for F_i in clean_pop.get("F")[index]])
             row.extend(["%i" % clean_pop.get("CB")[index]])
             write_to.writerow(row)
         f.close()
@@ -620,8 +621,8 @@ def all_individuals(res, save_folder):
         for algo in hist:
             for i in range(len(algo.pop)):
                 row = [index]
-                row.extend(["%.6f" % X_i for X_i in algo.pop.get("X")[i]])
-                row.extend(["%.6f" % F_i for F_i in algo.pop.get("F")[i]])
+                row.extend([f"%.{OUTPUT_PRECISION}f" % X_i for X_i in algo.pop.get("X")[i]])
+                row.extend([f"%.{OUTPUT_PRECISION}f" % F_i for F_i in algo.pop.get("F")[i]])
                 row.extend(["%i" % algo.pop.get("CB")[i]])
                 write_to.writerow(row)
                 index += 1
@@ -652,8 +653,8 @@ def all_critical_individuals(res, save_folder):
         # for algo in hist:
         for i in range(len(critical)):
             row = [index]
-            row.extend(["%.6f" % X_i for X_i in critical.get("X")[i]])
-            row.extend(["%.6f" % F_i for F_i in critical.get("F")[i]])
+            row.extend([f"%.{OUTPUT_PRECISION}f" % X_i for X_i in critical.get("X")[i]])
+            row.extend([f"%.{OUTPUT_PRECISION}f" % F_i for F_i in critical.get("F")[i]])
             write_to.writerow(row)
             index += 1
         f.close()
@@ -685,8 +686,8 @@ def write_generations(res, save_folder):
             index = 0
             for i in range(len(algo.pop)):
                 row = [index]
-                row.extend(["%.6f" % X_i for X_i in algo.pop.get("X")[i]])
-                row.extend(["%.6f" % F_i for F_i in algo.pop.get("F")[i]])
+                row.extend([f"%.{OUTPUT_PRECISION}f" % X_i for X_i in algo.pop.get("X")[i]])
+                row.extend([f"%.{OUTPUT_PRECISION}f" % F_i for F_i in algo.pop.get("F")[i]])
                 row.extend(["%i" % algo.pop.get("CB")[i]])
                 write_to.writerow(row)
                 index += 1
@@ -737,8 +738,8 @@ def write_generations(res, save_folder):
             index = 0
             for i in range(len(algo.pop)):
                 row = [index]
-                row.extend(["%.6f" % X_i for X_i in algo.pop.get("X")[i]])
-                row.extend(["%.6f" % F_i for F_i in algo.pop.get("F")[i]])
+                row.extend([f"%.{OUTPUT_PRECISION}f" % X_i for X_i in algo.pop.get("X")[i]])
+                row.extend([f"%.{OUTPUT_PRECISION}f" % F_i for F_i in algo.pop.get("F")[i]])
                 row.extend(["%i" % algo.pop.get("CB")[i]])
                 write_to.writerow(row)
                 index += 1
@@ -770,8 +771,8 @@ def write_pf_individuals(save_folder, pf_pop):
 
         for index in range(len(pf_pop)):
             row = [index]
-            row.extend(["%.6f" % X_i for X_i in pf_pop.get("X")[index]])
-            row.extend(["%.6f" % F_i for F_i in pf_pop.get("F")[index]])
+            row.extend([f"%.{OUTPUT_PRECISION}f" % X_i for X_i in pf_pop.get("X")[index]])
+            row.extend([f"%.{OUTPUT_PRECISION}f" % F_i for F_i in pf_pop.get("F")[index]])
             row.extend(["%i" % pf_pop.get("CB")[index]])
             write_to.writerow(row)
         f.close()

@@ -9,6 +9,7 @@ from opensbt.utils.geometric import *
 import logging as log
 from opensbt.utils import geometric
 import json
+from datetime import datetime
 
 ''' Simulation based on linear motion of two actors. 
     Ego contains an AEB which scans for nearby vehicles below some distance threshold.
@@ -18,7 +19,14 @@ class DummySimulator(Simulator):
     DETECTION_THRESH = 2     # threshold in meters where other actors can be detected
     RANDOMNESS_BIAS = 0.1    # noise to be added to positions
     ## Simulates a set of scenarios and returns the output
+    archive = {}
 
+    def ind_in_archive(ind):
+        if tuple(ind) in DummySimulator.archive:
+            return True
+        else:
+            return False
+        
     @staticmethod
     def simulate(list_individuals, 
                  variable_names, 
@@ -28,19 +36,25 @@ class DummySimulator(Simulator):
                  do_visualize: bool = False
         ) -> List[SimulationOutput]:
         results = []
-        for ind in list_individuals:            
-            with open(os.getcwd() + os.sep + 'tmp.csv', mode = 'a+') as f:
-                write_to = csv.writer(f)
-                write_to.writerow([ind])
 
-            f.close()
+        for ind in list_individuals:      
+            ################## duplicate simulation avoidance    
+            if not DummySimulator.ind_in_archive(ind):
+                time = datetime.now().strftime("%d-%m-%Y_%H-%M-%S") 
+                with open(os.getcwd() + os.sep + f'simulated_inds_{time}.csv', mode = 'a+') as f:
+                    write_to = csv.writer(f)
+                    write_to.writerow([ind])
 
-            simout = DummySimulator.simulate_single(ind, 
-                                                    variable_names, 
-                                                    filepath=scenario_path, 
-                                                    sim_time=sim_time,
-                                                    time_step=time_step)
-            results.append(simout)
+                f.close()
+                simout = DummySimulator.simulate_single(ind, 
+                                                        variable_names, 
+                                                        filepath=scenario_path, 
+                                                        sim_time=sim_time,
+                                                        time_step=time_step)
+            else:
+                input()
+                simout = DummySimulator.archive[tuple(ind)]
+            results.append(simout)                
         return results
 
     @staticmethod
