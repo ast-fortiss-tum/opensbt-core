@@ -20,6 +20,7 @@ class DummySimulator(Simulator):
     RANDOMNESS_BIAS = 0.1    # noise to be added to positions
     ## Simulates a set of scenarios and returns the output
     archive = {}
+    now = datetime.now().strftime("%d-%m-%Y_%H-%M-%S")
 
     def ind_in_archive(ind):
         if tuple(ind) in DummySimulator.archive:
@@ -39,9 +40,8 @@ class DummySimulator(Simulator):
 
         for ind in list_individuals:      
             ################## duplicate simulation avoidance    
-            if not DummySimulator.ind_in_archive(ind):
-                time = datetime.now().strftime("%d-%m-%Y_%H-%M-%S") 
-                with open(os.getcwd() + os.sep + f'simulated_inds_{time}.csv', mode = 'a+') as f:
+            if not DummySimulator.ind_in_archive(ind): 
+                with open(os.getcwd() + os.sep + f'simulated_inds_{DummySimulator.now}.csv', mode = 'a+') as f:
                     write_to = csv.writer(f)
                     write_to.writerow([ind])
 
@@ -52,7 +52,6 @@ class DummySimulator(Simulator):
                                                         sim_time=sim_time,
                                                         time_step=time_step)
             else:
-                input()
                 simout = DummySimulator.archive[tuple(ind)]
             results.append(simout)                
         return results

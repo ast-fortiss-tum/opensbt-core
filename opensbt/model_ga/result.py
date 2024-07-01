@@ -85,7 +85,53 @@ class SimulationResult(Result):
             for generation in hist:
                 all_population = Population.merge(all_population, generation.pop)
         return all_population
+      
+    def obtain_archive(self):
+        return self.archive
+    
+    def obtain_history_archive(self, critical=False):
+        hist = self.history
+        if hist is not None:
+            n_evals = []  # corresponding number of function evaluations
+            hist_F = []  # the objective space values in each generation
+            for i, algo in enumerate(hist):
+                n_eval = algo.evaluator.n_eval
+                n_evals.append(n_eval)  # store the number of function evaluations
+                inds = self.archive[(i*n_eval):(i + 1)*n_eval]
+                if critical:
+                    crit = np.where((inds.get("CB"))) [0] 
+                    feas = np.where((inds.get("feasible"))) [0] 
+                    feas = list(set(crit) & set(feas))
+                else:
+                    feas = np.where(inds.get("feasible"))[0]  # filter out only the feasible and append and objective space values
+                hist_F.append(inds.get("F")[feas])
+        else:
+            n_evals = None
+            hist_F = None
+        return n_evals, hist_F
+     
+    def obtain_history_hitherto_archive(self,critical=False, optimal=True, var = "F"):
+            hist = self.history
+            n_evals = []  # corresponding number of function evaluations
+            hist_F = []  # the objective space values in each generation
 
+            all = Population()
+            for i, algo in enumerate(hist):
+                n_eval = algo.evaluator.n_eval
+                n_evals.append(n_eval)
+                all = self.archive[:(i + 1)*n_eval]
+                if optimal:
+                    all = get_nondominated_population(all)
+                
+                if critical:
+                    crit = np.where((all.get("CB"))) [0] 
+                    feas = np.where((all.get("feasible")))[0] 
+                    feas = list(set(crit) & set(feas))
+                else:
+                    feas = np.where(all.get("feasible"))[0]  # filter out only the feasible and append and objective space values
+                hist_F.append(all.get(var)[feas])
+            return n_evals, hist_F
+    
     def obtain_history_hitherto(self,critical=False, optimal=True, var = "F"):
         hist = self.history
         n_evals = []  # corresponding number of function evaluations

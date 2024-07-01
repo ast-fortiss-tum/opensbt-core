@@ -104,11 +104,11 @@ def get_pop_using_mode(res: Result, mode: str):
     inds = Population()
     # print(f"mode: {mode}")
     if mode == "all":
-        inds = res.obtain_all_population()
+        inds = res.obtain_archive()
     elif mode == "opt":
         inds = res.opt
     elif mode == "crit":
-        all = res.obtain_all_population()
+        all = res.obtain_archive()
         inds, _ = all.divide_critical_non_critical()
     else:
         print("Mode is not accepted. Accepted modes are: all, opt, crit.")
@@ -197,7 +197,7 @@ def create_markers():
     return marker_list
 
 def write_summary_results(res, save_folder):
-    all_population = res.obtain_all_population()
+    all_population = res.obtain_archive()
     best_population = res.opt
 
     critical_best,_ = best_population.divide_critical_non_critical()
@@ -262,7 +262,7 @@ def design_space(res, save_folder, classification_type=ClassificationType.DT, it
     xl = problem.xl
     xu = problem.xu
 
-    all_population = res.obtain_all_population()
+    all_population = res.obtain_archive()
     critical_all, _ = all_population.divide_critical_non_critical()
 
     if classification_type == ClassificationType.DT:
@@ -400,7 +400,8 @@ def objective_space(res, save_folder, iteration=None, show=False, last_iteration
 def plot_multi_objective_space(res, n_obj, save_folder_objective, objective_names, show, pf, last_iteration):
     all_population = Population()
     for i, generation in enumerate(res.history):
-        all_population = Population.merge(all_population, generation.pop)
+        # TODO first generation has somehow archive size of 0
+        all_population = generation.archive #Population.merge(all_population, generation.pop)
         # all_population = res.obtain_all_population()
 
         critical_all, _ = all_population.divide_critical_non_critical()
@@ -509,7 +510,7 @@ def plot_single_objective_space(result, save_folder_plot, objective_names, show,
     # Set the figure size to stretch the x-axis physically
     fig.set_size_inches(x_axis_width, fig.get_figheight(), forward=True)
 
-    all_population = res.obtain_all_population()
+    all_population = res.obtain_archive()
     critical, _ = all_population.divide_critical_non_critical()
 
     plt.title(f"{res.algorithm.__class__.__name__}\nObjective Space | {problem.problem_name}" + \
@@ -518,7 +519,7 @@ def plot_single_objective_space(result, save_folder_plot, objective_names, show,
     
     # we plot the fitness over time as it is only one value for each iteration
     for i, generation in enumerate(res.history):
-        all_population = generation.pop
+        all_population = generation.archive
         axis_y = 0
         critical, not_critical = all_population.divide_critical_non_critical()
         critical_clean = duplicate_free(critical)
@@ -635,7 +636,7 @@ def all_critical_individuals(res, save_folder):
     design_names = problem.design_names
     objective_names = problem.objective_names
 
-    all = res.obtain_all_population()
+    all = res.obtain_archive()
     critical = all.divide_critical_non_critical()[0]
 
     with open(save_folder + 'all_critical_testcases.csv', 'w', encoding='UTF8', newline='') as f:

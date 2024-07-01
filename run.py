@@ -190,5 +190,8 @@ if __name__ == "__main__":
 
     res = optimizer.run()
     res.write_results(results_folder=results_folder, params = optimizer.parameters)
-
+    for ind in res.archive:
+        with open(os.getcwd() + os.sep + f'archive.csv', mode = 'a+') as f:
+            write_to = csv.writer(f)
+            write_to.writerow([ind.get("X")])
     log.info("====== Algorithm search time: " + str("%.2f" % res.exec_time) + " sec")

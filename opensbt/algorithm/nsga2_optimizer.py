@@ -19,6 +19,9 @@ from opensbt.algorithm.optimizer import Optimizer
 from opensbt.experiment.search_configuration import SearchConfiguration
 import opensbt.analysis.quality_indicators.metrics.spread as qi
 from opensbt.model_ga.result import *
+from pymoo.util.archive import MultiObjectiveArchive
+
+from opensbt.utils.archive import MemoryArchive
 
 class NsgaIIOptimizer(Optimizer):
 
@@ -51,7 +54,8 @@ class NsgaIIOptimizer(Optimizer):
             sampling=FloatRandomSampling(),
             crossover=SBX(prob=config.prob_crossover, eta=config.eta_crossover),
             mutation=PM(prob=config.prob_mutation, eta=config.eta_mutation),
-            eliminate_duplicates=True)
+            eliminate_duplicates=True,
+            archive=MemoryArchive())
 
         ''' Prioritize max search time over set maximal number of generations'''
         if config.maximal_execution_time is not None:
