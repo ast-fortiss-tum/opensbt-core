@@ -11,6 +11,7 @@ from pymoo.optimize import minimize
 from pymoo.termination import get_termination
 from pymoo.core.problem import Problem
 from opensbt.exception.configuration import RestrictiveConfigException
+from opensbt.utils.archive import MemoryArchive
 from opensbt.utils.time_utils import convert_pymoo_time_to_seconds
 from pymoo.core.population import Population
 from opensbt.visualization.configuration import *
@@ -103,7 +104,8 @@ class NsgaIIDTOptimizer(Optimizer):
             sampling=None,
             crossover=SBX(prob=prob_crossover, eta=eta_crossover),
             mutation=PM(prob=prob_mutation, eta=eta_mutation),
-            eliminate_duplicates=True)
+            eliminate_duplicates=True,
+            archive=MemoryArchive())
 
         tree_iteration = 0
         n_func_evals = 0
@@ -130,7 +132,8 @@ class NsgaIIDTOptimizer(Optimizer):
                     sampling=initial_population,
                     crossover=SBX(prob=prob_crossover, eta=eta_crossover),
                     mutation=PM(prob=prob_mutation, eta=eta_mutation),
-                    eliminate_duplicates=True)
+                    eliminate_duplicates=True,
+                    archive=MemoryArchive())
 
                 termination = get_termination("n_gen", inner_num_gen)
 
@@ -220,5 +223,6 @@ class NsgaIIDTOptimizer(Optimizer):
         # log.info(f"opt_all: {opt_all}")
         opt_all_nds = get_nondominated_population(opt_all)
         res_holder.opt = opt_all_nds
+        res_holder.archive = opt_all  # for now the same all pops together
 
         return res_holder

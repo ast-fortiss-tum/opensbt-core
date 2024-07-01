@@ -20,6 +20,8 @@ from opensbt.experiment.search_configuration import SearchConfiguration
 from opensbt.model_ga.result import *
 import logging as log
 
+from opensbt.utils.archive import MemoryArchive
+
 class PSOOptimizer(Optimizer):
 
     algorithm_name = "PSO"
@@ -43,6 +45,7 @@ class PSOOptimizer(Optimizer):
         # initialize algorithm
         self.algorithm = PSO(
             pop_size=config.population_size,
+            archive = MemoryArchive()
         )
 
         ''' Prioritize max search time over set maximal number of generations'''

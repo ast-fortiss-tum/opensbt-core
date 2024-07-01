@@ -84,12 +84,14 @@ class PureSampling(Optimizer):
         res_holder = SimulationResult()
         res_holder.algorithm = Algorithm()
         res_holder.algorithm.pop = pop
+        res_holder.algorithm.archive = pop
         res_holder.algorithm.evaluator.n_eval = len(pop)
         res_holder.problem = problem
         res_holder.algorithm.problem = problem
         res_holder.exec_time = execution_time
         res_holder.opt = get_nondominated_population(pop)
         res_holder.algorithm.opt = res_holder.opt
+        res_holder.archive = pop
 
         res_holder.history = []  # history is the same instance 
         n_bucket = len(pop) // n_splits
@@ -99,6 +101,7 @@ class PureSampling(Optimizer):
             
             algo = Algorithm()
             algo.pop = pop[(i*n_bucket):min((i+1)*n_bucket,len(pop))]
+            algo.archive = pop[:min((i+1)*n_bucket,len(pop))]
             pop_sofar += len(algo.pop)
             algo.evaluator.n_eval = pop_sofar
             algo.opt = get_nondominated_population(algo.pop)

@@ -8,7 +8,7 @@ RESULTS_FOLDER = os.sep + "results" + os.sep
 WRITE_ALL_INDIVIDUALS = True
 LOG_FILE = "." + os.sep + "log.txt"
 BACKUP_FOLDER = "backup"
-EXPERIMENTAL_MODE = False
+EXPERIMENTAL_MODE = True
 
 # analysis module
 N_CELLS = 10

@@ -373,7 +373,7 @@ def objective_space(res, save_folder, iteration=None, show=False, last_iteration
     objective_names = problem.objective_names
     
     if n_obj == 1:
-       plot_single_objective_space(result=res,
+        plot_single_objective_space(result=res,
                                    save_folder_plot=save_folder_plot,
                                    objective_names=objective_names,
                                    show=show,
@@ -399,11 +399,19 @@ def objective_space(res, save_folder, iteration=None, show=False, last_iteration
 
 def plot_multi_objective_space(res, n_obj, save_folder_objective, objective_names, show, pf, last_iteration):
     all_population = Population()
+    n_evals_all = 0
     for i, generation in enumerate(res.history):
         # TODO first generation has somehow archive size of 0
-        all_population = generation.archive #Population.merge(all_population, generation.pop)
-        # all_population = res.obtain_all_population()
+        # all_population = generation.archive #Population.merge(all_population, generation.pop)
+        n_eval = generation.evaluator.n_eval
+        n_evals_all += n_eval
+        # print(f"[visualizer] n_eval: {n_eval}")
 
+        all_population = res.archive[0:n_evals_all]
+        #assert len(all_population) == n_eval, f"{len(all_population)} != {n_eval}"
+
+        # all_population = res.obtain_all_population()
+        # print(f"[visualizer] len(gen archive): {len(all_population)}")
         critical_all, _ = all_population.divide_critical_non_critical()
         
         # plot only last iteration if requested
@@ -516,10 +524,15 @@ def plot_single_objective_space(result, save_folder_plot, objective_names, show,
     plt.title(f"{res.algorithm.__class__.__name__}\nObjective Space | {problem.problem_name}" + \
                     " (" + str(len(all_population)) + " testcases, " + \
                         str(len(critical)) + " of which are critical)")
-    
+        
+    n_evals_all = 0
+
     # we plot the fitness over time as it is only one value for each iteration
     for i, generation in enumerate(res.history):
-        all_population = generation.archive
+        n_eval = generation.evaluator.n_eval
+        n_evals_all += n_eval
+        # print(f"[visualizer] n_eval: {n_eval}")
+        all_population = res.archive[0:n_evals_all]
         axis_y = 0
         critical, not_critical = all_population.divide_critical_non_critical()
         critical_clean = duplicate_free(critical)
@@ -532,9 +545,9 @@ def plot_single_objective_space(result, save_folder_plot, objective_names, show,
         if len(critical_clean) != 0:
             plt.scatter([i]*len(critical_clean), critical_clean.get("F")[:, axis_y], s=40,
                         facecolors=color_not_optimal, edgecolors=color_critical, marker='o')
-
         optimal_pop = get_nondominated_population(all_population)
         critical, not_critical = optimal_pop.divide_critical_non_critical()
+
         critical_clean = duplicate_free(critical)
         not_critical_clean = duplicate_free(not_critical)
         
