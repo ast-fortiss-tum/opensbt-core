@@ -41,11 +41,11 @@ class DummySimulator(Simulator):
         for ind in list_individuals:      
             ################## duplicate simulation avoidance    
             if not DummySimulator.ind_in_archive(ind): 
-                with open(os.getcwd() + os.sep + f'simulated_inds_{DummySimulator.now}.csv', mode = 'a+') as f:
-                    write_to = csv.writer(f)
-                    write_to.writerow([ind])
+                # with open(os.getcwd() + os.sep + f'simulated_inds_{DummySimulator.now}.csv', mode = 'a+') as f:
+                #     write_to = csv.writer(f)
+                #     write_to.writerow([ind])
 
-                f.close()
+                # f.close()
                 simout = DummySimulator.simulate_single(ind, 
                                                         variable_names, 
                                                         filepath=scenario_path, 

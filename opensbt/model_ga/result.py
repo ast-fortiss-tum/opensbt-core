@@ -189,7 +189,7 @@ class SimulationResult(Result):
         # visualizer.convergence_analysis(self, save_folder)
         # visualizer.hypervolume_analysis(self, save_folder)
         # visualizer.spread_analysis(self, save_folder)
-        
+        visualizer.write_generations(self, save_folder)
         visualizer.write_calculation_properties(self,save_folder,algorithm_name, algorithm_parameters=params)
         visualizer.design_space(self, save_folder)
         visualizer.objective_space(self, save_folder)
