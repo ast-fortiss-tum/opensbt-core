@@ -383,9 +383,7 @@ def objective_space(res, save_folder, iteration=None, show=False, last_iteration
 
         # output 3d plots
         if n_obj == 3:
-            all_population = Population()
-            for i, generation in enumerate(res.history):
-                all_population = Population.merge(all_population, generation.pop)
+            all_population = res.obtain_archive()
             visualize_3d(all_population, 
                 save_folder_objective, 
                 objective_names, 
