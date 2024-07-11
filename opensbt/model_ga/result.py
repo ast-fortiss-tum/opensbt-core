@@ -39,23 +39,41 @@ class SimulationResult(Result):
         return n_evals, hist_X
     
     # iteration of first critical solutions found + fitness values
+    # def get_first_critical(self):
+    #     hist = self.history
+    #     res = Population() 
+    #     iter = 0
+    #     if hist is not None:
+    #         for algo in hist:
+    #             iter += 1
+    #             #n_evals.append(algo.evaluator.n_eval)  # store the number of function evaluations
+    #             opt = algo.opt  # retrieve the optimum from the algorithm
+    #             crit = np.where((opt.get("CB"))) [0] 
+    #             feas = np.where((opt.get("feasible"))) [0] 
+    #             feas = list(set(crit) & set(feas))
+    #             res = opt[feas]
+    #             if len(res) == 0:
+    #                 continue
+    #             else:
+    #                 return iter, res
+    #     return 0, res
+    
     def get_first_critical(self):
         hist = self.history
+        archive = self.obtain_archive()
         res = Population() 
-        iter = 0
-        if hist is not None:
-            for algo in hist:
-                iter += 1
+        if hist is not None and archive is not None:
+            for index, algo in enumerate(hist):
                 #n_evals.append(algo.evaluator.n_eval)  # store the number of function evaluations
-                opt = algo.opt  # retrieve the optimum from the algorithm
-                crit = np.where((opt.get("CB"))) [0] 
-                feas = np.where((opt.get("feasible"))) [0] 
+                inds = archive[:algo.evaluator.n_eval]
+                crit = np.where((inds.get("CB"))) [0] 
+                feas = np.where((inds.get("feasible"))) [0] 
                 feas = list(set(crit) & set(feas))
-                res = opt[feas]
+                res = inds[feas]
                 if len(res) == 0:
                     continue
                 else:
-                    return iter, res
+                    return index, res
         return 0, res
     
     def obtain_history(self, critical=False):
@@ -94,10 +112,11 @@ class SimulationResult(Result):
         if hist is not None:
             n_evals = []  # corresponding number of function evaluations
             hist_F = []  # the objective space values in each generation
+            n_eval_last = 0
             for i, algo in enumerate(hist):
-                n_eval = algo.evaluator.n_eval
+                n_eval = algo.evaluator.n_eval - n_eval_last # get the number of evals for the current iteration
                 n_evals.append(n_eval)  # store the number of function evaluations
-                inds = self.archive[(i*n_eval):(i + 1)*n_eval]
+                inds = self.archive[n_eval_last : algo.evaluator.n_eval]
                 if critical:
                     crit = np.where((inds.get("CB"))) [0] 
                     feas = np.where((inds.get("feasible"))) [0] 
@@ -105,6 +124,8 @@ class SimulationResult(Result):
                 else:
                     feas = np.where(inds.get("feasible"))[0]  # filter out only the feasible and append and objective space values
                 hist_F.append(inds.get("F")[feas])
+                # update for next calculation
+                n_eval_last = algo.evaluator.n_eval
         else:
             n_evals = None
             hist_F = None
@@ -119,7 +140,7 @@ class SimulationResult(Result):
             for i, algo in enumerate(hist):
                 n_eval = algo.evaluator.n_eval
                 n_evals.append(n_eval)
-                all = self.archive[:(i + 1)*n_eval]
+                all = self.archive[:n_eval]
                 if optimal:
                     all = get_nondominated_population(all)
                 

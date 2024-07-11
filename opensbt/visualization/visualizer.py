@@ -399,15 +399,16 @@ def objective_space(res, save_folder, iteration=None, show=False, last_iteration
 
 def plot_multi_objective_space(res, n_obj, save_folder_objective, objective_names, show, pf, last_iteration):
     all_population = Population()
-    n_evals_all = 0
+    # n_evals_all = 0
     for i, generation in enumerate(res.history):
         # TODO first generation has somehow archive size of 0
         # all_population = generation.archive #Population.merge(all_population, generation.pop)
         n_eval = generation.evaluator.n_eval
-        n_evals_all += n_eval
+        # TODO assure that every algorithm stores in n_eval the number of evaluations SO FAR performed!!
+        # n_evals_all += n_eval
         # print(f"[visualizer] n_eval: {n_eval}")
 
-        all_population = res.archive[0:n_evals_all]
+        all_population = res.archive[0:n_eval]
         #assert len(all_population) == n_eval, f"{len(all_population)} != {n_eval}"
 
         # all_population = res.obtain_all_population()
@@ -632,14 +633,13 @@ def all_individuals(res, save_folder):
         write_to.writerow(header)
 
         index = 0
-        for algo in hist:
-            for i in range(len(algo.pop)):
+        all_individuals = res.obtain_archive()
+        for index, ind in enumerate(all_individuals):
                 row = [index]
-                row.extend([f"%.{OUTPUT_PRECISION}f" % X_i for X_i in algo.pop.get("X")[i]])
-                row.extend([f"%.{OUTPUT_PRECISION}f" % F_i for F_i in algo.pop.get("F")[i]])
-                row.extend(["%i" % algo.pop.get("CB")[i]])
+                row.extend([f"%.{OUTPUT_PRECISION}f" % X_i for X_i in ind.get("X")])
+                row.extend([f"%.{OUTPUT_PRECISION}f" % F_i for F_i in ind.get("F")])
+                row.extend(["%i" % ind.get("CB")])
                 write_to.writerow(row)
-                index += 1
         f.close()
 
 def all_critical_individuals(res, save_folder):

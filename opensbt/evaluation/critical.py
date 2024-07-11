@@ -71,6 +71,13 @@ class CriticalAdasTTCVelocity(Critical):
             return True
         else:
             return False
+        
+class CriticalAdasTTC(Critical):
+    def eval(self, vector_fitness, simout: SimulationOutput = None):
+        if (vector_fitness[0] < 0.01):
+            return True
+        else:
+            return False
 
 
     '''
