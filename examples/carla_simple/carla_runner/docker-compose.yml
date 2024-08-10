@@ -1,0 +1,23 @@
+version: '0.1'
+
+services:
+  carla-server:
+    image: carlasim/carla:0.9.13
+    privileged: true
+    networks:
+      - carla-network
+    environment:
+      - DISPLAY=${DISPLAY}
+    volumes:
+      - /tmp/recordings:/tmp/recordings:rw
+    deploy:
+      replicas: 1
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+    command: /bin/bash ./CarlaUE4.sh -RenderOffScreen -quality-level=Low
+
+networks:
+  carla-network:
+   name: carla-network

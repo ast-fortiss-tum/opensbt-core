@@ -1,0 +1,11 @@
+# IDE
+.vscode/
+
+# Python
+env/
+**/__pycache__/
+*.egg-info
+dist/
+
+# CARLA
+cache/
