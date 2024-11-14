@@ -1,8 +1,5 @@
-
-<div align="center">
 | :zap:       This project has moved to [https://github.com/opensbt/opensbt-core](https://github.com/opensbt/opensbt-core) (14-11-2024)   :zap: |
 |---------------------------------------------------------------------|
-</div>
 
 <div align="center" style="background: rgb(44,46,57);">
   <img src="./docs/figures/fortiss-openSBT-Logo-RGB-neg-back.png" height="150" style="background-color:rgb(44,46,57);"/>
